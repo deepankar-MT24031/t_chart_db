@@ -10,6 +10,7 @@ CREATE SEQUENCE IF NOT EXISTS treatment_chart.extra_table_id_seq;
 CREATE SEQUENCE IF NOT EXISTS treatment_chart.other_medications_id_seq;
 CREATE SEQUENCE IF NOT EXISTS treatment_chart.antimicrobials_id_seq;
 CREATE SEQUENCE IF NOT EXISTS treatment_chart.feeds_id_seq;
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.supportive_care_id_seq;
 
 -- 1. patient (no foreign keys to other tables in this set)
 CREATE TABLE treatment_chart.patient (
@@ -123,5 +124,14 @@ CREATE TABLE treatment_chart.feeds (
     id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.feeds_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     content VARCHAR,
+    volume VARCHAR
+);
+
+-- 12. supportive_care
+CREATE TABLE treatment_chart.supportive_care (
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.supportive_care_id_seq'),
+    observation_id UUID REFERENCES treatment_chart.observation(observation_id),
+    content VARCHAR,
+    rate VARCHAR,
     volume VARCHAR
 );
