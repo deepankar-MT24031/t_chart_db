@@ -1,6 +1,16 @@
 -- Ensure the schema exists
 CREATE SCHEMA IF NOT EXISTS treatment_chart;
 
+-- Create sequences first
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.inotropes_id_seq;
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.respiratory_support_id_seq;
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.sedation_id_seq;
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.iv_fluid_id_seq;
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.extra_table_id_seq;
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.other_medications_id_seq;
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.antimicrobials_id_seq;
+CREATE SEQUENCE IF NOT EXISTS treatment_chart.feeds_id_seq;
+
 -- 1. patient (no foreign keys to other tables in this set)
 CREATE TABLE treatment_chart.patient (
     uuid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -48,22 +58,16 @@ CREATE TABLE treatment_chart.observation (
 
 -- 4. inotropes
 CREATE TABLE treatment_chart.inotropes (
-    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.inotropes_id_seq'::regclass),
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.inotropes_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     content VARCHAR,
     dose VARCHAR,
     volume VARCHAR
 );
--- If sequence doesn't exist and you want auto-creation:
--- CREATE TABLE treatment_chart.inotropes (
---     id SERIAL PRIMARY KEY,
---     ...
--- );
--- Note: You'd need to create the sequence 'treatment_chart.inotropes_id_seq' separately if not using SERIAL.
 
 -- 5. respiratory_support
 CREATE TABLE treatment_chart.respiratory_support (
-    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.respiratory_support_id_seq'::regclass),
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.respiratory_support_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     content VARCHAR,
     rate VARCHAR,
@@ -72,7 +76,7 @@ CREATE TABLE treatment_chart.respiratory_support (
 
 -- 6. sedation
 CREATE TABLE treatment_chart.sedation (
-    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.sedation_id_seq'::regclass),
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.sedation_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     content VARCHAR,
     dose VARCHAR,
@@ -81,7 +85,7 @@ CREATE TABLE treatment_chart.sedation (
 
 -- 7. iv_fluid
 CREATE TABLE treatment_chart.iv_fluid (
-    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.iv_fluid_id_seq'::regclass),
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.iv_fluid_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     content VARCHAR,
     rate VARCHAR,
@@ -90,14 +94,14 @@ CREATE TABLE treatment_chart.iv_fluid (
 
 -- 8. extra_table
 CREATE TABLE treatment_chart.extra_table (
-    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.extra_table_id_seq'::regclass),
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.extra_table_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     json_content JSONB
 );
 
 -- 9. other_medications
 CREATE TABLE treatment_chart.other_medications (
-    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.other_medications_id_seq'::regclass),
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.other_medications_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     content VARCHAR,
     dose VARCHAR,
@@ -106,7 +110,7 @@ CREATE TABLE treatment_chart.other_medications (
 
 -- 10. antimicrobials
 CREATE TABLE treatment_chart.antimicrobials (
-    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.antimicrobials_id_seq'::regclass),
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.antimicrobials_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     content VARCHAR,
     day VARCHAR,
@@ -116,7 +120,7 @@ CREATE TABLE treatment_chart.antimicrobials (
 
 -- 11. feeds
 CREATE TABLE treatment_chart.feeds (
-    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.feeds_id_seq'::regclass),
+    id INTEGER PRIMARY KEY DEFAULT nextval('treatment_chart.feeds_id_seq'),
     observation_id UUID REFERENCES treatment_chart.observation(observation_id),
     content VARCHAR,
     volume VARCHAR
